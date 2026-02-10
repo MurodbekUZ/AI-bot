@@ -38,11 +38,20 @@ n_chat_modes_per_page = int(os.environ.get("N_CHAT_MODES_PER_PAGE", config_yaml.
 
 # mongodb
 mongodb_uri = os.environ.get("MONGODB_URL") or os.environ.get("MONGO_URL") or os.environ.get("MONGODB_URI")
+
+# Railway'da ba'zan o'zgaruvchilar nomi boshqacha bo'lishi mumkin, shuning uchun hammasini tekshiramiz
+if not mongodb_uri:
+    for key, value in os.environ.items():
+        if "MONGO" in key.upper() and ("URL" in key.upper() or "URI" in key.upper()):
+            mongodb_uri = value
+            break
+
 if not mongodb_uri:
     mongodb_port = os.environ.get("MONGODB_PORT", 27017)
     mongodb_uri = f"mongodb://mongo:{mongodb_port}"
-
-print(f"MongoDB URI: {mongodb_uri.split('@')[-1] if '@' in mongodb_uri else mongodb_uri}")
+    print(f"⚠️ DIQQAT: Railway o'zgaruvchisi topilmadi. Standart manzil ishlatilyapti: {mongodb_uri}")
+else:
+    print(f"✅ MongoDB ulanishi bazadan olindi: {mongodb_uri.split('@')[-1] if '@' in mongodb_uri else mongodb_uri}")
 
 # chat_modes
 with open(config_dir / "chat_modes.yml", 'r') as f:
