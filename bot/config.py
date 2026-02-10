@@ -42,6 +42,8 @@ if not mongodb_uri:
     mongodb_port = os.environ.get("MONGODB_PORT", 27017)
     mongodb_uri = f"mongodb://mongo:{mongodb_port}"
 
+print(f"MongoDB URI: {mongodb_uri.split('@')[-1] if '@' in mongodb_uri else mongodb_uri}")
+
 # chat_modes
 with open(config_dir / "chat_modes.yml", 'r') as f:
     chat_modes = yaml.safe_load(f)
